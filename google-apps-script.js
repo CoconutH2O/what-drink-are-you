@@ -24,7 +24,12 @@ function doPost(e) {
     // Parse incoming data
     const data = JSON.parse(e.postData.contents);
     
-    // Save to sheet
+    // Check if this is a stats request
+    if (data.action === 'stats') {
+      return getResultStats();
+    }
+    
+    // Otherwise, save to sheet (normal game submission)
     saveToSheet(data);
     
     // Return success response
@@ -41,14 +46,73 @@ function doPost(e) {
   }
 }
 
-// Handle GET requests (for testing)
+// Handle OPTIONS preflight requests for CORS
+function doOptions(e) {
+  return ContentService
+    .createTextOutput('')
+    .setMimeType(ContentService.MimeType.TEXT);
+}
+
+// Handle GET requests (for testing and stats)
 function doGet(e) {
+  // Check if requesting stats
+  if (e && e.parameter && e.parameter.action === 'stats') {
+    return getResultStats();
+  }
+  
   return ContentService
     .createTextOutput(JSON.stringify({ 
       status: 'ok', 
       message: 'Adventure Game Data Collector is running!' 
     }))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+// Get result statistics
+function getResultStats() {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheetByName('Responses');
+    
+    if (!sheet) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ success: true, stats: {}, total: 0 }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    const data = sheet.getDataRange().getValues();
+    const resultColumn = 4; // Column E (0-indexed: 4) = Result (Drink)
+    
+    // Count each result (skip header row)
+    const counts = {};
+    let total = 0;
+    
+    for (let i = 1; i < data.length; i++) {
+      const result = data[i][resultColumn];
+      if (result) {
+        counts[result] = (counts[result] || 0) + 1;
+        total++;
+      }
+    }
+    
+    // Calculate percentages
+    const stats = {};
+    for (const [drink, count] of Object.entries(counts)) {
+      stats[drink] = {
+        count: count,
+        percentage: total > 0 ? Math.round((count / total) * 100 * 10) / 10 : 0
+      };
+    }
+    
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: true, stats: stats, total: total }))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: false, error: error.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }
 
 // Main function to save data to sheet
@@ -66,11 +130,11 @@ function saveToSheet(data) {
       'Session ID',
       'Start Time',
       'End Time',
-      'Result',
-      'Risk Score',
-      'Growth Score',
-      'Stability Score',
-      'Innovation Score',
+      'Result (Drink)',
+      'Style (Plan↔Spontaneous)',
+      'Risk (Safety↔Growth)',
+      'Value Focus (Tangible↔Experience)',
+      'Integration (Separate↔Shared)',
       'Choices Path',
       'User Agent'
     ];
@@ -92,10 +156,10 @@ function saveToSheet(data) {
     data.startTime || '',
     data.endTime || '',
     data.result || '',
+    data.values?.style || 0,
     data.values?.risk || 0,
-    data.values?.growth || 0,
-    data.values?.stability || 0,
-    data.values?.innovation || 0,
+    data.values?.valueFocus || 0,
+    data.values?.integration || 0,
     choicesPath,
     data.userAgent || ''
   ];
@@ -120,16 +184,16 @@ function testDataInsertion() {
     startTime: new Date().toISOString(),
     endTime: new Date().toISOString(),
     values: { 
-      risk: 5, 
-      growth: 4, 
-      stability: 3, 
-      innovation: 6 
+      style: 5, 
+      risk: 4, 
+      valueFocus: 3, 
+      integration: 6 
     },
     choices: [
-      { scene: 'start', choice: 0, text: 'Mountain path' },
-      { scene: 'mountain', choice: 1, text: 'Summit' }
+      { scene: 'start', choice: 1, text: 'Surprise me!' },
+      { scene: 'surprise', choice: 0, text: 'Experimental' }
     ],
-    result: 'adventurer',
+    result: 'boba',
     userAgent: 'Test from Apps Script'
   };
   
@@ -160,11 +224,11 @@ function createResponsesSheet() {
     'Session ID', 
     'Start Time',
     'End Time',
-    'Result',
-    'Risk Score',
-    'Growth Score',
-    'Stability Score',
-    'Innovation Score',
+    'Result (Drink)',
+    'Style (Plan↔Spontaneous)',
+    'Risk (Safety↔Growth)',
+    'Value Focus (Tangible↔Experience)',
+    'Integration (Separate↔Shared)',
     'Choices Path',
     'User Agent'
   ];

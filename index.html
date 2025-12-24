@@ -6,7 +6,7 @@
     <title>Choose Your Adventure</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -15,8 +15,8 @@
         <div id="start-screen" class="screen active">
             <div class="screen-content">
                 <div class="title-decoration">✦</div>
-                <h1 class="game-title">The Path<br>Unfolds</h1>
-                <p class="game-subtitle">A journey of choices awaits</p>
+                <h1 class="game-title">What Drink<br>Are You?</h1>
+                <p class="game-subtitle">Slurp Slurp Slurp ✨</p>
                 <button class="btn btn-primary" id="start-btn">Begin Your Journey</button>
             </div>
             <div class="ambient-glow"></div>
@@ -47,7 +47,7 @@
         <div id="loading-screen" class="screen">
             <div class="screen-content">
                 <div class="loader"></div>
-                <p class="loading-text">Calculating your destiny...</p>
+                <p class="loading-text">Brewing your drink type...</p>
             </div>
         </div>
 
@@ -55,21 +55,42 @@
         <div id="results-screen" class="screen">
             <div class="screen-content">
                 <div class="results-card">
-                    <div class="results-decoration">✦</div>
-                    <h2 class="results-title" id="results-title">Your Journey Complete</h2>
-                    <div class="results-image-wrapper">
-                        <img id="results-image" src="" alt="Result" class="results-image">
+                    <!-- Capturable area for download -->
+                    <div id="results-capture">
+                        <div class="results-decoration">✦</div>
+                        <h2 class="results-title" id="results-title">Your Journey Complete</h2>
+                        <div class="results-image-wrapper">
+                            <img id="results-image" src="" alt="Result" class="results-image">
+                        </div>
+                        <p id="results-description" class="results-description"></p>
+                        <div class="results-stats" id="results-stats">
+                            <!-- Stats will be dynamically inserted here -->
+                        </div>
                     </div>
-                    <p id="results-description" class="results-description"></p>
-                    <div class="results-stats" id="results-stats">
-                        <!-- Stats will be dynamically inserted here -->
+                    <!-- End capturable area -->
+                    <div class="results-actions">
+                        <div class="results-actions-row">
+                            <button class="btn btn-secondary" id="restart-btn">Start Again</button>
+                            <button class="btn btn-icon" id="download-btn" title="Download as image">📷</button>
+                        </div>
+                        <button class="btn btn-tertiary" id="stats-btn">📊 Show Rarity Stats</button>
                     </div>
-                    <button class="btn btn-secondary" id="restart-btn">Start Again</button>
+                    <div class="stats-dropdown" id="stats-dropdown" style="display: none;">
+                        <h4>How rare is your drink? 🍹</h4>
+                        <div class="stats-list" id="stats-list">
+                            <p class="stats-loading">Loading stats...</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- html2canvas for image download -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <!-- Adventure data (edit this file to customize drinks & scenes) -->
+    <script src="js/adventure-data.js"></script>
+    <!-- Game engine -->
     <script src="js/app.js"></script>
 </body>
 </html>

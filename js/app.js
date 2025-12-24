@@ -2,6 +2,8 @@
  * Choose Your Own Adventure Game Engine
  * =====================================
  * A mobile-friendly adventure game with value tracking and Google Sheets integration
+ * 
+ * NOTE: Adventure data is loaded from adventure-data.js
  */
 
 // ==========================================
@@ -17,253 +19,6 @@ const CONFIG = {
     
     // Show debug information in console
     DEBUG: true
-};
-
-// ==========================================
-// ADVENTURE DATA
-// ==========================================
-// Edit this object to create your adventure!
-
-const ADVENTURE_DATA = {
-    title: "The Financial Path",
-    
-    // Define the value categories that will be tracked
-    valueCategories: [
-        { id: 'risk', label: 'Risk Tolerance' },
-        { id: 'growth', label: 'Growth Focus' },
-        { id: 'stability', label: 'Stability Preference' },
-        { id: 'innovation', label: 'Innovation Interest' }
-    ],
-    
-    // Define all scenes/screens in your adventure
-    scenes: {
-        start: {
-            id: 'start',
-            image: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&q=80',
-            text: 'You stand at a crossroads in your financial journey. The morning sun casts long shadows on the path ahead. Which way does your intuition guide you?',
-            choices: [
-                {
-                    text: 'Take the mountain path - challenging but promising great views',
-                    values: { risk: 2, growth: 2, stability: 0, innovation: 1 },
-                    nextScene: 'mountain'
-                },
-                {
-                    text: 'Follow the river - steady and reliable, with hidden depths',
-                    values: { risk: 0, growth: 1, stability: 2, innovation: 0 },
-                    nextScene: 'river'
-                },
-                {
-                    text: 'Enter the forest - mysterious paths with unexpected discoveries',
-                    values: { risk: 1, growth: 1, stability: 0, innovation: 2 },
-                    nextScene: 'forest'
-                }
-            ]
-        },
-        
-        mountain: {
-            id: 'mountain',
-            image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80',
-            text: 'The mountain path is steep but invigorating. Halfway up, you discover a cave with glowing crystals and a well-worn trail continuing upward. What calls to you?',
-            choices: [
-                {
-                    text: 'Explore the crystal cave - there might be treasures within',
-                    values: { risk: 2, growth: 1, stability: 0, innovation: 2 },
-                    nextScene: 'cave'
-                },
-                {
-                    text: 'Continue to the summit - the goal is clear and the reward certain',
-                    values: { risk: 1, growth: 2, stability: 1, innovation: 0 },
-                    nextScene: 'summit'
-                }
-            ]
-        },
-        
-        river: {
-            id: 'river',
-            image: 'https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=800&q=80',
-            text: 'The river flows peacefully, its waters clear and deep. You find a sturdy boat tied to the shore and notice a bridge in the distance. How do you proceed?',
-            choices: [
-                {
-                    text: 'Take the boat downstream - let the current guide your journey',
-                    values: { risk: 1, growth: 1, stability: 1, innovation: 1 },
-                    nextScene: 'downstream'
-                },
-                {
-                    text: 'Cross the bridge - a solid path to the other side',
-                    values: { risk: 0, growth: 1, stability: 2, innovation: 0 },
-                    nextScene: 'bridge'
-                }
-            ]
-        },
-        
-        forest: {
-            id: 'forest',
-            image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=800&q=80',
-            text: 'The forest whispers ancient secrets. Bioluminescent mushrooms light a hidden path, while a treehouse village glimmers through the canopy above.',
-            choices: [
-                {
-                    text: 'Follow the mushroom trail - embrace the unconventional path',
-                    values: { risk: 2, growth: 0, stability: 0, innovation: 3 },
-                    nextScene: 'mushroom'
-                },
-                {
-                    text: 'Climb to the treehouse village - community awaits above',
-                    values: { risk: 1, growth: 2, stability: 1, innovation: 1 },
-                    nextScene: 'treehouse'
-                }
-            ]
-        },
-        
-        cave: {
-            id: 'cave',
-            image: 'https://images.unsplash.com/photo-1504699439244-a7f8b9e3e1b9?w=800&q=80',
-            text: 'The crystals pulse with an inner light. Deep within, you find an ancient chest and a mirror that shows not your reflection, but possibilities...',
-            choices: [
-                {
-                    text: 'Open the chest - fortune favors the bold',
-                    values: { risk: 3, growth: 2, stability: -1, innovation: 1 },
-                    nextScene: 'ending'
-                },
-                {
-                    text: 'Gaze into the mirror - understand before you act',
-                    values: { risk: 0, growth: 1, stability: 2, innovation: 2 },
-                    nextScene: 'ending'
-                }
-            ]
-        },
-        
-        summit: {
-            id: 'summit',
-            image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80',
-            text: 'At the summit, the world spreads before you. An eagle offers to carry you to new heights, while a mountain sage offers wisdom for the descent.',
-            choices: [
-                {
-                    text: 'Accept the eagle\'s gift - soar to new possibilities',
-                    values: { risk: 2, growth: 3, stability: 0, innovation: 1 },
-                    nextScene: 'ending'
-                },
-                {
-                    text: 'Learn from the sage - wisdom is the greatest treasure',
-                    values: { risk: 0, growth: 1, stability: 2, innovation: 1 },
-                    nextScene: 'ending'
-                }
-            ]
-        },
-        
-        downstream: {
-            id: 'downstream',
-            image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&q=80',
-            text: 'The river carries you to a delta where three channels diverge. Each leads to a different shore - one golden, one green, one shimmering with starlight.',
-            choices: [
-                {
-                    text: 'The golden shore - prosperity awaits',
-                    values: { risk: 1, growth: 3, stability: 1, innovation: 0 },
-                    nextScene: 'ending'
-                },
-                {
-                    text: 'The green shore - sustainable growth beckons',
-                    values: { risk: 0, growth: 2, stability: 2, innovation: 1 },
-                    nextScene: 'ending'
-                },
-                {
-                    text: 'The starlit shore - dreams become reality',
-                    values: { risk: 2, growth: 1, stability: 0, innovation: 3 },
-                    nextScene: 'ending'
-                }
-            ]
-        },
-        
-        bridge: {
-            id: 'bridge',
-            image: 'https://images.unsplash.com/photo-1513002749550-c59d786b8e6c?w=800&q=80',
-            text: 'The bridge leads to a peaceful valley. A farmer offers you seeds to plant, while a merchant suggests investing in their caravan.',
-            choices: [
-                {
-                    text: 'Accept the seeds - grow your own future',
-                    values: { risk: 0, growth: 2, stability: 3, innovation: 0 },
-                    nextScene: 'ending'
-                },
-                {
-                    text: 'Join the caravan - diversify your opportunities',
-                    values: { risk: 1, growth: 2, stability: 1, innovation: 1 },
-                    nextScene: 'ending'
-                }
-            ]
-        },
-        
-        mushroom: {
-            id: 'mushroom',
-            image: 'https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=800&q=80',
-            text: 'The mushroom path leads to an enchanted glade where ideas take physical form. A thought-creature offers to show you futures yet unimagined.',
-            choices: [
-                {
-                    text: 'Embrace the vision - innovation requires imagination',
-                    values: { risk: 2, growth: 1, stability: 0, innovation: 4 },
-                    nextScene: 'ending'
-                },
-                {
-                    text: 'Thank it but stay grounded - keep one foot in reality',
-                    values: { risk: 0, growth: 1, stability: 2, innovation: 2 },
-                    nextScene: 'ending'
-                }
-            ]
-        },
-        
-        treehouse: {
-            id: 'treehouse',
-            image: 'https://images.unsplash.com/photo-1520637836993-a071674e5362?w=800&q=80',
-            text: 'The treehouse village thrives on cooperation. The elders offer you a place in their council or a map to unexplored territories beyond.',
-            choices: [
-                {
-                    text: 'Join the council - build something lasting together',
-                    values: { risk: 0, growth: 2, stability: 3, innovation: 1 },
-                    nextScene: 'ending'
-                },
-                {
-                    text: 'Take the map - new frontiers await',
-                    values: { risk: 2, growth: 2, stability: 0, innovation: 2 },
-                    nextScene: 'ending'
-                }
-            ]
-        },
-        
-        ending: {
-            id: 'ending',
-            isEnding: true
-        }
-    },
-    
-    // Define result profiles based on value combinations
-    results: [
-        {
-            id: 'adventurer',
-            title: 'The Bold Adventurer',
-            description: 'You embrace risk and seek growth at every turn. Your financial journey will be marked by bold moves and potentially great rewards. Consider balancing your portfolio with some stable investments.',
-            image: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80',
-            condition: (values) => values.risk >= 5 && values.growth >= 4
-        },
-        {
-            id: 'innovator',
-            title: 'The Creative Innovator',
-            description: 'You see possibilities where others see obstacles. Your openness to new ideas positions you well for emerging opportunities. Stay curious but do your due diligence.',
-            image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80',
-            condition: (values) => values.innovation >= 5
-        },
-        {
-            id: 'guardian',
-            title: 'The Steady Guardian',
-            description: 'Security and stability guide your choices. You build wealth through patience and careful planning. Your approach protects against volatility while ensuring steady progress.',
-            image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80',
-            condition: (values) => values.stability >= 5
-        },
-        {
-            id: 'balanced',
-            title: 'The Balanced Seeker',
-            description: 'You walk the middle path, balancing risk with security, growth with stability. This versatile approach allows you to adapt to changing circumstances while maintaining a solid foundation.',
-            image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
-            condition: (values) => true // Default fallback
-        }
-    ]
 };
 
 // ==========================================
@@ -290,6 +45,11 @@ const elements = {
     
     startBtn: document.getElementById('start-btn'),
     restartBtn: document.getElementById('restart-btn'),
+    statsBtn: document.getElementById('stats-btn'),
+    downloadBtn: document.getElementById('download-btn'),
+    statsDropdown: document.getElementById('stats-dropdown'),
+    statsList: document.getElementById('stats-list'),
+    resultsCapture: document.getElementById('results-capture'),
     
     progressFill: document.getElementById('progress-fill'),
     sceneImage: document.getElementById('scene-image'),
@@ -385,17 +145,41 @@ function loadScene(sceneId) {
     elements.choicesContainer.innerHTML = '';
     
     scene.choices.forEach((choice, index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'choice-wrapper';
+        
         const button = document.createElement('button');
         button.className = 'choice-btn';
         button.textContent = choice.text;
         button.addEventListener('click', () => makeChoice(choice, index));
         
+        // Create info icon with tooltip
+        const infoIcon = document.createElement('div');
+        infoIcon.className = 'choice-info';
+        infoIcon.innerHTML = `
+            ℹ️
+            <div class="choice-tooltip">
+                ${Object.entries(choice.values).map(([key, value]) => {
+                    const category = ADVENTURE_DATA.valueCategories.find(c => c.id === key);
+                    const label = category ? (value < 0 ? category.labelLeft : category.labelRight) : key;
+                    const valueClass = value > 0 ? 'positive' : value < 0 ? 'negative' : '';
+                    return `<div class="tooltip-row">
+                        <span class="tooltip-label">${label}</span>
+                        <span class="tooltip-value ${valueClass}">${value > 0 ? '+' : ''}${value}</span>
+                    </div>`;
+                }).join('')}
+            </div>
+        `;
+        
+        wrapper.appendChild(button);
+        wrapper.appendChild(infoIcon);
+        
+        elements.choicesContainer.appendChild(wrapper);
+        
         // Stagger animation
         setTimeout(() => {
-            button.classList.add('animate-in');
+            wrapper.classList.add('animate-in');
         }, 100 + (index * 100));
-        
-        elements.choicesContainer.appendChild(button);
     });
     
     updateProgress();
@@ -423,16 +207,55 @@ function makeChoice(choice, choiceIndex) {
     log('Current values:', gameState.values);
     
     // Visual feedback
+    const wrappers = elements.choicesContainer.querySelectorAll('.choice-wrapper');
     const buttons = elements.choicesContainer.querySelectorAll('.choice-btn');
-    buttons[choiceIndex].classList.add('selected');
+    wrappers[choiceIndex].querySelector('.choice-btn').classList.add('selected');
     
     // Disable all buttons
     buttons.forEach(btn => btn.disabled = true);
     
+    // Determine next scene (handle random branching)
+    const nextScene = resolveNextScene(choice.nextScene);
+    
     // Transition to next scene
     setTimeout(() => {
-        loadScene(choice.nextScene);
+        loadScene(nextScene);
     }, 400);
+}
+
+/**
+ * Resolve the next scene, handling random branching
+ * @param {string|object} nextScene - Either a scene ID string or a random config object
+ * @returns {string} The resolved scene ID
+ */
+function resolveNextScene(nextScene) {
+    // If it's a simple string, return it directly
+    if (typeof nextScene === 'string') {
+        return nextScene;
+    }
+    
+    // Handle random branching: { random: [{ scene: 'x', chance: 0.5 }, { scene: 'y', chance: 0.5 }] }
+    if (nextScene && nextScene.random && Array.isArray(nextScene.random)) {
+        const roll = Math.random();
+        let cumulative = 0;
+        
+        for (const option of nextScene.random) {
+            cumulative += option.chance;
+            if (roll < cumulative) {
+                log(`Random branch: rolled ${roll.toFixed(2)}, going to ${option.scene}`);
+                return option.scene;
+            }
+        }
+        
+        // Fallback to last option if rounding issues
+        const lastOption = nextScene.random[nextScene.random.length - 1];
+        log(`Random branch: fallback to ${lastOption.scene}`);
+        return lastOption.scene;
+    }
+    
+    // Fallback
+    log('Warning: Could not resolve nextScene', nextScene);
+    return 'ending';
 }
 
 function endGame() {
@@ -447,6 +270,9 @@ function endGame() {
         setTimeout(() => {
             displayResults(result);
             showScreen(elements.resultsScreen);
+            // Scroll to top of results
+            elements.resultsScreen.scrollTop = 0;
+            window.scrollTo(0, 0);
         }, 1500);
     }).catch(error => {
         log('Error submitting to sheets:', error);
@@ -454,19 +280,42 @@ function endGame() {
         setTimeout(() => {
             displayResults(result);
             showScreen(elements.resultsScreen);
+            // Scroll to top of results
+            elements.resultsScreen.scrollTop = 0;
+            window.scrollTo(0, 0);
         }, 1500);
     });
 }
 
 function determineResult() {
-    // Find the first matching result
+    // Calculate similarity score for each drink
+    // Lower distance = better match
+    let bestMatch = null;
+    let bestScore = Infinity;
+    
     for (const result of ADVENTURE_DATA.results) {
-        if (result.condition(gameState.values)) {
-            return result;
+        if (!result.targets) continue;
+        
+        // Calculate Euclidean distance between user values and drink targets
+        let distance = 0;
+        for (const [trait, targetValue] of Object.entries(result.targets)) {
+            const userValue = gameState.values[trait] || 0;
+            distance += Math.pow(userValue - targetValue, 2);
+        }
+        distance = Math.sqrt(distance);
+        
+        log(`${result.id} distance: ${distance.toFixed(2)}`);
+        
+        if (distance < bestScore) {
+            bestScore = distance;
+            bestMatch = result;
         }
     }
-    // Return last result as fallback
-    return ADVENTURE_DATA.results[ADVENTURE_DATA.results.length - 1];
+    
+    log(`Best match: ${bestMatch?.id} with distance ${bestScore.toFixed(2)}`);
+    
+    // Return best match or fallback to last result
+    return bestMatch || ADVENTURE_DATA.results[ADVENTURE_DATA.results.length - 1];
 }
 
 function displayResults(result) {
@@ -474,17 +323,51 @@ function displayResults(result) {
     elements.resultsImage.src = result.image;
     elements.resultsDescription.textContent = result.description;
     
-    // Display stats
+    // Display spectrum stats
     elements.resultsStats.innerHTML = '';
     ADVENTURE_DATA.valueCategories.forEach(category => {
+        const value = gameState.values[category.id] || 0;
+        const minValue = category.minValue || -10;
+        const maxValue = category.maxValue || 10;
+        
+        // Calculate position as percentage (0% = left, 50% = center, 100% = right)
+        // Maps from minValue (-10) to maxValue (+10) onto 0-100%
+        const range = maxValue - minValue;
+        const percentage = Math.min(Math.max(((value - minValue) / range) * 100, 0), 100);
+        
         const statItem = document.createElement('div');
         statItem.className = 'stat-item';
         statItem.innerHTML = `
-            <div class="stat-value">${gameState.values[category.id]}</div>
-            <div class="stat-label">${category.label}</div>
+            <div class="stat-labels">
+                <span class="stat-label stat-label-left">${category.labelLeft}</span>
+                <span class="stat-label stat-label-right">${category.labelRight}</span>
+            </div>
+            <div class="stat-bar">
+                <div class="stat-bar-track"></div>
+                <div class="stat-bar-marker" style="left: ${percentage}%"></div>
+            </div>
         `;
         elements.resultsStats.appendChild(statItem);
     });
+    
+    // Display compatibility section
+    if (result.compatibility) {
+        const compatDrinks = result.compatibility.drinks
+            .map(drinkId => {
+                const drink = ADVENTURE_DATA.results.find(r => r.id === drinkId);
+                return drink ? drink.title : drinkId;
+            })
+            .join(' • ');
+        
+        const compatSection = document.createElement('div');
+        compatSection.className = 'compatibility-section';
+        compatSection.innerHTML = `
+            <h3 class="compatibility-title">Gets along best with</h3>
+            <p class="compatibility-drinks">${compatDrinks}</p>
+            <p class="compatibility-description">${result.compatibility.description}</p>
+        `;
+        elements.resultsStats.appendChild(compatSection);
+    }
     
     log('Final result:', result.id);
     log('Final values:', gameState.values);
@@ -541,7 +424,158 @@ async function submitToGoogleSheets() {
 elements.startBtn.addEventListener('click', startGame);
 elements.restartBtn.addEventListener('click', () => {
     showScreen(elements.startScreen);
+    // Hide stats dropdown when restarting
+    if (elements.statsDropdown) {
+        elements.statsDropdown.style.display = 'none';
+    }
 });
+
+// Download image button handler
+if (elements.downloadBtn) {
+    elements.downloadBtn.addEventListener('click', async () => {
+        if (typeof html2canvas === 'undefined') {
+            log('html2canvas not loaded');
+            return;
+        }
+        
+        const captureElement = elements.resultsCapture;
+        if (!captureElement) return;
+        
+        try {
+            // Convert the result image to base64 to avoid CORS issues
+            const resultImg = elements.resultsImage;
+            let originalSrc = resultImg.src;
+            
+            // Try to convert image to base64
+            try {
+                const response = await fetch(resultImg.src);
+                const blob = await response.blob();
+                const base64 = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.readAsDataURL(blob);
+                });
+                resultImg.src = base64;
+                // Wait for image to load
+                await new Promise(resolve => setTimeout(resolve, 100));
+            } catch (e) {
+                log('Could not convert image to base64:', e);
+            }
+            
+            // Temporarily add padding for nicer capture
+            captureElement.style.padding = '20px';
+            captureElement.style.background = '#FFFFFF';
+            
+            const canvas = await html2canvas(captureElement, {
+                backgroundColor: '#FFFFFF',
+                scale: 2, // Higher resolution
+                useCORS: true,
+                allowTaint: true,
+                logging: false
+            });
+            
+            // Reset styles and image src
+            captureElement.style.padding = '';
+            captureElement.style.background = '';
+            resultImg.src = originalSrc;
+            
+            // Create download link
+            const link = document.createElement('a');
+            const drinkName = elements.resultsTitle.textContent.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '').toLowerCase();
+            link.download = `${drinkName}_results.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            log('Image downloaded');
+        } catch (error) {
+            log('Error capturing image:', error);
+        }
+    });
+}
+
+// Stats button handler
+let statsLoaded = false;
+if (elements.statsBtn) {
+    elements.statsBtn.addEventListener('click', async () => {
+        const dropdown = elements.statsDropdown;
+        
+        if (dropdown.style.display === 'none') {
+            dropdown.style.display = 'block';
+            elements.statsBtn.textContent = '📊 Hide Rarity Stats';
+            
+            // Fetch stats if not already loaded
+            if (!statsLoaded) {
+                await fetchAndDisplayStats();
+            }
+        } else {
+            dropdown.style.display = 'none';
+            elements.statsBtn.textContent = '📊 Show Rarity Stats';
+        }
+    });
+}
+
+async function fetchAndDisplayStats() {
+    if (!CONFIG.GOOGLE_SCRIPT_URL || !CONFIG.ENABLE_TRACKING) {
+        elements.statsList.innerHTML = '<p class="stats-loading">Stats not available (tracking disabled)</p>';
+        return;
+    }
+    
+    try {
+        elements.statsList.innerHTML = '<p class="stats-loading">Loading stats...</p>';
+        
+        // Use POST with text/plain to ensure simple request (no CORS preflight)
+        const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain',
+            },
+            body: JSON.stringify({ action: 'stats' })
+        });
+        const data = await response.json();
+        
+        log('Stats response:', JSON.stringify(data));
+        
+        if (data.success && data.stats && Object.keys(data.stats).length > 0) {
+            displayStats(data.stats, data.total);
+            statsLoaded = true;
+        } else if (data.total === 0 || !data.stats || Object.keys(data.stats).length === 0) {
+            elements.statsList.innerHTML = '<p class="stats-loading">No data yet — be the first!</p>';
+        } else {
+            elements.statsList.innerHTML = '<p class="stats-loading">No data yet — be the first!</p>';
+        }
+    } catch (error) {
+        log('Error fetching stats:', error);
+        elements.statsList.innerHTML = '<p class="stats-loading">Could not load stats (check console)</p>';
+    }
+}
+
+function displayStats(stats, total) {
+    const currentResult = gameState.result?.id;
+    
+    // Sort by percentage descending
+    const sorted = Object.entries(stats).sort((a, b) => b[1].percentage - a[1].percentage);
+    
+    // Get drink titles from ADVENTURE_DATA
+    const drinkTitles = {};
+    ADVENTURE_DATA.results.forEach(r => {
+        drinkTitles[r.id] = r.title;
+    });
+    
+    let html = `<p style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 12px;">Based on ${total} results</p>`;
+    
+    sorted.forEach(([drinkId, data]) => {
+        const title = drinkTitles[drinkId] || drinkId;
+        const isCurrent = drinkId === currentResult;
+        html += `
+            <div class="stats-row ${isCurrent ? 'current' : ''}">
+                <span class="stats-drink">${title} ${isCurrent ? '← You!' : ''}</span>
+                <span class="stats-percent">${data.percentage}%</span>
+            </div>
+        `;
+    });
+    
+    elements.statsList.innerHTML = html;
+}
 
 // Preload images
 function preloadImages() {
