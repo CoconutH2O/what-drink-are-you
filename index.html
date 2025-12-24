@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Choose Your Adventure</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen active">
+            <div class="screen-content">
+                <div class="title-decoration">✦</div>
+                <h1 class="game-title">The Path<br>Unfolds</h1>
+                <p class="game-subtitle">A journey of choices awaits</p>
+                <button class="btn btn-primary" id="start-btn">Begin Your Journey</button>
+            </div>
+            <div class="ambient-glow"></div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="screen-content">
+                <div class="scene-container">
+                    <div class="scene-image-wrapper">
+                        <img id="scene-image" src="" alt="Scene" class="scene-image">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="scene-text-container">
+                        <p id="scene-text" class="scene-text"></p>
+                    </div>
+                </div>
+                <div class="choices-container" id="choices-container">
+                    <!-- Choices will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="screen">
+            <div class="screen-content">
+                <div class="loader"></div>
+                <p class="loading-text">Calculating your destiny...</p>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="screen">
+            <div class="screen-content">
+                <div class="results-card">
+                    <div class="results-decoration">✦</div>
+                    <h2 class="results-title" id="results-title">Your Journey Complete</h2>
+                    <div class="results-image-wrapper">
+                        <img id="results-image" src="" alt="Result" class="results-image">
+                    </div>
+                    <p id="results-description" class="results-description"></p>
+                    <div class="results-stats" id="results-stats">
+                        <!-- Stats will be dynamically inserted here -->
+                    </div>
+                    <button class="btn btn-secondary" id="restart-btn">Start Again</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
+
