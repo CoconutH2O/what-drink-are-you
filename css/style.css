@@ -474,6 +474,60 @@ body::before {
     margin-bottom: 16px;
     border: var(--border-thick);
     box-shadow: var(--shadow-pop-sm);
+    position: relative;
+}
+
+.achievement-badges {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 10;
+}
+
+.achievement-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid var(--color-border);
+    border-radius: 20px;
+    padding: 4px 10px 4px 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text);
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.15);
+    animation: badgePop 0.4s var(--transition-bounce) backwards;
+}
+
+.achievement-badge:nth-child(1) { animation-delay: 0.1s; }
+.achievement-badge:nth-child(2) { animation-delay: 0.2s; }
+.achievement-badge:nth-child(3) { animation-delay: 0.3s; }
+.achievement-badge:nth-child(4) { animation-delay: 0.4s; }
+.achievement-badge:nth-child(5) { animation-delay: 0.5s; }
+
+.achievement-badge .badge-icon {
+    font-size: 1rem;
+}
+
+.achievement-badge.risk-taker { border-color: #c0392b; background: #e74c3c; color: #fff; }
+.achievement-badge.romantic { border-color: #c2185b; background: #e91e63; color: #fff; }
+.achievement-badge.adventurer { border-color: #27ae60; background: #2ecc71; color: #fff; }
+.achievement-badge.big-spender { border-color: #d68910; background: #f39c12; color: #fff; }
+.achievement-badge.budget-king { border-color: #2980b9; background: #3498db; color: #fff; }
+.achievement-badge.team-player { border-color: #8e44ad; background: #9b59b6; color: #fff; }
+
+@keyframes badgePop {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) translateX(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateX(0);
+    }
 }
 
 .results-image {

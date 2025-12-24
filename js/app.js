@@ -59,7 +59,8 @@ const elements = {
     resultsTitle: document.getElementById('results-title'),
     resultsImage: document.getElementById('results-image'),
     resultsDescription: document.getElementById('results-description'),
-    resultsStats: document.getElementById('results-stats')
+    resultsStats: document.getElementById('results-stats'),
+    achievementBadges: document.getElementById('achievement-badges')
 };
 
 // ==========================================
@@ -369,8 +370,59 @@ function displayResults(result) {
         elements.resultsStats.appendChild(compatSection);
     }
     
+    // Display achievement badges
+    displayAchievementBadges();
+    
     log('Final result:', result.id);
     log('Final values:', gameState.values);
+}
+
+function displayAchievementBadges() {
+    if (!elements.achievementBadges) return;
+    
+    elements.achievementBadges.innerHTML = '';
+    const badges = [];
+    
+    const values = gameState.values;
+    const visitedScenes = gameState.choices.map(c => c.sceneId);
+    
+    // 🎰 Risk Taker - high risk score (>= 5)
+    if (values.risk >= 5) {
+        badges.push({ icon: '🎰', label: 'Risk Taker', class: 'risk-taker' });
+    }
+    
+    // 🥞 Hopeless Romantic - went on the date (stardust pancakes!)
+    if (visitedScenes.includes('date_scene')) {
+        badges.push({ icon: '🥞', label: 'Romantic', class: 'romantic' });
+    }
+    
+    // 🎒 Adventurer - visited many unique scenes (>= 12)
+    const uniqueScenes = new Set(visitedScenes).size;
+    if (uniqueScenes >= 12) {
+        badges.push({ icon: '🎒', label: 'Adventurer', class: 'adventurer' });
+    }
+    
+    // 💰 Big Spender / Budget King - based on valueFocus
+    if (values.valueFocus <= -5) {
+        badges.push({ icon: '💰', label: 'Big Spender', class: 'big-spender' });
+    } else if (values.valueFocus >= 5) {
+        badges.push({ icon: '👑', label: 'Budget King', class: 'budget-king' });
+    }
+    
+    // 🤝 Team Player - high integration (>= 5)
+    if (values.integration >= 5) {
+        badges.push({ icon: '🤝', label: 'Team Player', class: 'team-player' });
+    }
+    
+    // Render badges
+    badges.forEach(badge => {
+        const badgeEl = document.createElement('div');
+        badgeEl.className = `achievement-badge ${badge.class}`;
+        badgeEl.innerHTML = `<span class="badge-icon">${badge.icon}</span><span>${badge.label}</span>`;
+        elements.achievementBadges.appendChild(badgeEl);
+    });
+    
+    log('Badges earned:', badges.map(b => b.label));
 }
 
 // ==========================================
